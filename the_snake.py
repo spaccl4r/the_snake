@@ -96,6 +96,66 @@ class GameObject:
         pass
 
 
+class Snake(GameObject):
+    """Наследуемый класс змейки."""
+
+    def __init__(self):
+        super().__init__(body_color=DARK_GREEN)
+        self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
+        self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
+        self.grow = False
+
+    def move(self):
+        """Инициализация движения."""
+        head = self.positions[0]
+        new_head = ((head[0] + self.direction[0]) % GRID_WIDTH,
+                    (head[1] + self.direction[1]) % GRID_HEIGHT)
+
+        if new_head in self.positions[4:]:
+            game_over('self')
+            return False
+
+        self.positions.insert(0, new_head)
+        if not self.grow:
+            self.positions.pop()
+        else:
+            self.grow = False
+        return True
+
+    def draw_cell(self, position):
+        """Отрисовка одной ячейки змейки."""
+        rect = pygame.Rect(position[0] * GRID_SIZE,
+                           position[1] * GRID_SIZE,
+                           GRID_SIZE,
+                           GRID_SIZE)
+        pygame.draw.rect(screen, self.body_color, rect)
+        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
+    def draw(self):
+        """Отрисовка на игровом поле."""
+        for segment in self.positions:
+            self.draw_cell(segment)
+
+    def update_direction(self, new_direction):
+        """Смена направления движения змейки."""
+        if (-new_direction[0], -new_direction[1]) != self.direction:
+            self.direction = new_direction
+
+    def reset(self):
+        """Сброс параметров змейки."""
+        self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
+        self.direction = RIGHT
+        self.grow = False
+
+    def get_head_position(self):
+        """Получить позицию головы змейки."""
+        return self.positions[0]
+
+    def length(self):
+        """Получить длину змейки."""
+        return len(self.positions)
+
+
 class Apple(GameObject):
     """
     Класс Apple. Наследуются от GameObject.
@@ -179,66 +239,6 @@ class Apple(GameObject):
 
             if event.key in MOVEMENT_KEYS:
                 snake.update_direction(MOVEMENT_KEYS[event.key])
-
-
-class Snake(GameObject):
-    """Наследуемый класс змейки."""
-
-    def __init__(self):
-        super().__init__(body_color=DARK_GREEN)
-        self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
-        self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
-        self.grow = False
-
-    def move(self):
-        """Инициализация движения."""
-        head = self.positions[0]
-        new_head = ((head[0] + self.direction[0]) % GRID_WIDTH,
-                    (head[1] + self.direction[1]) % GRID_HEIGHT)
-
-        if new_head in self.positions[4:]:
-            game_over("self")
-            return False
-
-        self.positions.insert(0, new_head)
-        if not self.grow:
-            self.positions.pop()
-        else:
-            self.grow = False
-        return True
-
-    def draw_cell(self, position):
-        """Отрисовка одной ячейки змейки."""
-        rect = pygame.Rect(position[0] * GRID_SIZE,
-                           position[1] * GRID_SIZE,
-                           GRID_SIZE,
-                           GRID_SIZE)
-        pygame.draw.rect(screen, self.body_color, rect)
-        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
-
-    def draw(self):
-        """Отрисовка на игровом поле."""
-        for segment in self.positions:
-            self.draw_cell(segment)
-
-    def update_direction(self, new_direction):
-        """Смена направления движения змейки."""
-        if (-new_direction[0], -new_direction[1]) != self.direction:
-            self.direction = new_direction
-
-    def reset(self):
-        """Сброс параметров змейки."""
-        self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
-        self.direction = RIGHT
-        self.grow = False
-
-    def get_head_position(self):
-        """Получить позицию головы змейки."""
-        return self.positions[0]
-
-    def length(self):
-        """Получить длину змейки."""
-        return len(self.positions)
 
 
 def main():
