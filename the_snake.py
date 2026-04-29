@@ -144,6 +144,16 @@ class Apple(GameObject):
     if apple.position is not None:
         apple.draw()
 
+    def reset_game(snake, apple, bombs):
+        """Сброс параметров игры."""
+        global score, frame_delay, apples_eaten
+        score = 0
+        frame_delay = 100
+        apples_eaten = 0
+        snake.reset()
+        bombs.clear()
+        occupied_cells = [*snake.positions, *(bomb.position for bomb in bombs)]
+        apple.randomize_position(occupied_cells)
 
     def game_over(collision_type):
         """Сценарий завершения игры."""
