@@ -163,33 +163,30 @@ class Apple(GameObject):
     """
     
     def __init__(self, body_color=APPLE_COLOR):
-         super().__init__(position=None, body_color=APPLE_COLOR)
+         super().__init__(body_color=APPLE_COLOR)
          self.randomize_position()
 
-    def randomize_position(self):
-        """
-        Устанавливает случайные координаты для яблока.
-        """
-        max_x = 640 - 20
-        max_y = 480 - 20
+    def randomize_position(self, occupied_cells=None):
+        """Устанавливает случайные координаты для яблока."""
+        if occupied_cells is None:
+            occupied_cells = []
 
-        x.random.randrage(0, max_x + 1, 20)
-        y.random.randrage(0, max_y + 1, 20)
+        while True:
+            x = randint(0, GRID_WIDTH - 1)
+            y = randint(0, GRID_HEIGHT - 1)
+            self.position = (x, y)
+            if self.position not in occupied_cells:
+                break
 
-        self.position = (x,y)
+    def draw(self, surface):
+        """Отрисовывает яблоко на игровом поле."""
+        rect = pygame.Rect(self.position[0] * GRID_SIZE,
+                           self.position[1] * GRID_SIZE,
+                           GRID_SIZE,
+                           GRID_SIZE)
+        pygame.draw.rect(surface, self.body_color, rect)
+        pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
-        def draw(self, surface):
-            """
-            Отрисовывает яблоко на игровом поле.
-            """
-            rect = pygame.Rect(
-                self.position[0],
-                self.position[1],
-                20,
-                20
-            )
-
-            pygame.draw.rect(surface, self.body_color, rect)
 
         def draw_game_area(snake, apple, bombs):
             """Игровое поле."""
@@ -200,8 +197,6 @@ class Apple(GameObject):
             if apple.position is not None:
                apple.draw(screen)
 
-    if apple.position is not None:
-        apple.draw()
 
     def reset_game(snake, apple, bombs):
         """Сброс параметров игры."""
