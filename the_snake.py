@@ -109,6 +109,21 @@ class Apple(GameObject):
     if apple.position is not None:
         apple.draw()
 
+    def handle_keys(snake):
+        """Обработка пользовательского ввода."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+
+            if event.key in MOVEMENT_KEYS:
+                snake.update_direction(MOVEMENT_KEYS[event.key])
+
+
 class Snake(GameObject):
     """Наследуемый класс змейки."""
 
