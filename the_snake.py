@@ -170,20 +170,65 @@ class Snake(GameObject):
 
 
 def main():
-    # Инициализация PyGame:
-    pygame.init()
-    # Тут нужно создать экземпляры классов.
-    ...
+    """Главная функция."""
+    global score, frame_delay, apples_eaten
+    global snake, apple, bombs
 
-    # while True:
-    #     clock.tick(SPEED)
+    snake = Snake()
+    apple = Apple()
+    bombs = []
 
-        # Тут опишите основную логику игры.
-        # ...
+    reset_game(snake, apple, bombs)
+
+    while True:
+        handle_keys(snake)
+
+        if not snake.move():
+            game_over('self')
+            reset_game(snake, apple, bombs)
+            continue
+
+        # Проверка на столкновение с самим собой
+        if snake.get_head_position() in snake.positions[1:]:
+            game_over('self')
+            reset_game(snake, apple, bombs)
+            continue
+
+        # Проверка на столкновение с бомбой
+        if snake.get_head_position() in [bomb.position for bomb in bombs]:
+            game_over('bomb')
+            reset_game(snake, apple, bombs)
+            continue
+
+        # Проверка на съедение яблока
+        if snake.get_head_position() == apple.position:
+            occupied_cells = [*snake.positions,
+                              *(bomb.position for bomb in bombs)]
+            apple.randomize_position(occupied_cells)
+            snake.grow = True
+            score += 1
+            apples_eaten += 1
+
+            if apples_eaten % 5 == 0:
+                frame_delay -= 10
+                if frame_delay < 30:
+                    frame_delay = 30
+                occupied_cells = [*snake.positions, apple.position,
+                                  *(bomb.position for bomb in bombs)]
+                bomb = Apple(body_color=BLUE)
+                bomb.randomize_position(occupied_cells)
+                bombs.append(bomb)
+
+        draw_game_area(snake, apple, bombs)
+        draw_info_area(score)
+
+        pygame.display.flip()
+        clock.tick(1000 // frame_delay)
 
 
 if __name__ == '__main__':
     main()
+    
 
 
 
