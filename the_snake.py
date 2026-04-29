@@ -134,6 +134,19 @@ class Apple(GameObject):
     if apple.position is not None:
         apple.draw()
 
+
+    def game_over(collision_type):
+        """Сценарий завершения игры."""
+        font = pygame.font.Font(None, 36)
+        text = font.render('Game over. Try again', True, RED)
+
+        text_x = (SCREEN_WIDTH - INFO_AREA_WIDTH) // 2 - text.get_width() // 2
+        text_y = SCREEN_HEIGHT // 2 - text.get_height() // 2
+        screen.blit(text, (text_x, text_y))
+        pygame.display.flip()
+        pygame.time.delay(2000)
+
+
     def handle_keys(snake):
         """Обработка пользовательского ввода."""
         for event in pygame.event.get():
