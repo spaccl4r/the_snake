@@ -246,8 +246,7 @@ class Apple(GameObject):
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-
-            if event.key in MOVEMENT_KEYS:
+                if event.key in MOVEMENT_KEYS:
                 snake.update_direction(MOVEMENT_KEYS[event.key])
 
 
@@ -310,7 +309,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
-
-
-
