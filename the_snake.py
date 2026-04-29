@@ -23,6 +23,7 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
+INFO_AREA_WIDTH = 400
 
 # Направления движения:
 UP = (0, -1)
@@ -69,7 +70,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 pygame.display.set_caption('Змейка')
 clock = pygame.time.Clock()
 
-# Тут опишите все классы игры.
+
 class GameObject:
     """
     Базовый класс, от которого наследуются все объекты.
@@ -82,9 +83,10 @@ class GameObject:
         Аргументы: position (координаты), body_color (цвет).
         """
         if position is None:
-            self.position = (320, 240)
+            self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         else:
             self.position = position
+        self.body_color = body_color
 
     def draw(self, surface):
         """
@@ -93,11 +95,13 @@ class GameObject:
         """
         pass
 
+
 class Apple(GameObject):
     """
     Класс Apple. Наследуются от GameObject.
     Появляется в случайном месте поля.
     """
+    
     def __init__(self, body_color=APPLE_COLOR):
          super().__init__(position=None, body_color=APPLE_COLOR)
          self.randomize_position()
