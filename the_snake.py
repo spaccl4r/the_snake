@@ -50,16 +50,16 @@ LIGHT_GREEN = (155, 188, 15)
 DARK_GREEN = (15, 56, 15)
 
 # Цвет фона - черный:
-BOARD_BACKGROUND_COLOR = (0, 0, 0)
+BOARD_BACKGROUND_COLOR = BLACK
 
 # Цвет границы ячейки
 BORDER_COLOR = (93, 216, 228)
 
 # Цвет яблока
-APPLE_COLOR = (255, 0, 0)
+APPLE_COLOR = RED
 
 # Цвет змейки
-SNAKE_COLOR = (0, 255, 0)
+SNAKE_COLOR = GREEN
 
 # Скорость движения змейки:
 SPEED = 20
@@ -158,13 +158,13 @@ class Snake(GameObject):
 
 class Apple(GameObject):
     """
-    Класс Apple. Наследуются от GameObject.
+    Класс Apple. Наследуется от GameObject.
     Появляется в случайном месте поля.
     """
-    
+
     def __init__(self, body_color=APPLE_COLOR):
-         super().__init__(body_color=APPLE_COLOR)
-         self.randomize_position()
+        super().__init__(body_color=body_color)
+        self.randomize_position()
 
     def randomize_position(self, occupied_cells=None):
         """Устанавливает случайные координаты для яблока."""
@@ -188,65 +188,65 @@ class Apple(GameObject):
         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
 
-        def draw_game_area(snake, apple, bombs):
-            """Игровое поле."""
-            screen.fill(BOARD_BACKGROUND_COLOR)
-            snake.draw()
-            for bomb in bombs:
-                bomb.draw(screen)
-            if apple.position is not None:
-               apple.draw(screen)
+def draw_game_area(snake, apple, bombs):
+    """Игровое поле."""
+    screen.fill(BOARD_BACKGROUND_COLOR)
+    snake.draw()
+    for bomb in bombs:
+        bomb.draw(screen)
+    if apple.position is not None:
+        apple.draw(screen)
 
 
-        def draw_info_area(score):
-            """Информационное поле."""
-            info_area = pygame.Rect(SCREEN_WIDTH - INFO_AREA_WIDTH, 0,
+def draw_info_area(score):
+    """Информационное поле."""
+    info_area = pygame.Rect(SCREEN_WIDTH - INFO_AREA_WIDTH, 0,
                             INFO_AREA_WIDTH, SCREEN_HEIGHT)
-            pygame.draw.rect(screen, LIGHT_GRAY, info_area)
-            y = 10
-            for text in INSTRUCTION_TEXT:
-                if '{}' in text:
-                    text = text.format(score)
-                line = FONT.render(text, True, BLACK)
-                screen.blit(line, (SCREEN_WIDTH - 390, y))
-                y += 30
+    pygame.draw.rect(screen, LIGHT_GRAY, info_area)
+    y = 10
+    for text in INSTRUCTION_TEXT:
+        if '{}' in text:
+            text = text.format(score)
+        line = FONT.render(text, True, BLACK)
+        screen.blit(line, (SCREEN_WIDTH - 390, y))
+        y += 30
 
 
-    def reset_game(snake, apple, bombs):
-        """Сброс параметров игры."""
-        global score, frame_delay, apples_eaten
-        score = 0
-        frame_delay = 100
-        apples_eaten = 0
-        snake.reset()
-        bombs.clear()
-        occupied_cells = [*snake.positions, *(bomb.position for bomb in bombs)]
-        apple.randomize_position(occupied_cells)
+def reset_game(snake, apple, bombs):
+    """Сброс параметров игры."""
+    global score, frame_delay, apples_eaten
+    score = 0
+    frame_delay = 100
+    apples_eaten = 0
+    snake.reset()
+    bombs.clear()
+    occupied_cells = [*snake.positions, *(bomb.position for bomb in bombs)]
+    apple.randomize_position(occupied_cells)
 
 
-    def game_over(collision_type):
-        """Сценарий завершения игры."""
-        font = pygame.font.Font(None, 36)
-        text = font.render('Game over. Try again', True, RED)
+def game_over(collision_type):
+    """Сценарий завершения игры."""
+    font = pygame.font.Font(None, 36)
+    text = font.render('Game over. Try again', True, RED)
 
-        text_x = (SCREEN_WIDTH - INFO_AREA_WIDTH) // 2 - text.get_width() // 2
-        text_y = SCREEN_HEIGHT // 2 - text.get_height() // 2
-        screen.blit(text, (text_x, text_y))
-        pygame.display.flip()
-        pygame.time.delay(2000)
+    text_x = (SCREEN_WIDTH - INFO_AREA_WIDTH) // 2 - text.get_width() // 2
+    text_y = SCREEN_HEIGHT // 2 - text.get_height() // 2
+    screen.blit(text, (text_x, text_y))
+    pygame.display.flip()
+    pygame.time.delay(2000)
 
 
-    def handle_keys(snake):
-        """Обработка пользовательского ввода."""
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+def handle_keys(snake):
+    """Обработка пользовательского ввода."""
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-                if event.key in MOVEMENT_KEYS:
+            if event.key in MOVEMENT_KEYS:
                 snake.update_direction(MOVEMENT_KEYS[event.key])
 
 
