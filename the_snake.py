@@ -98,6 +98,17 @@ class Apple(GameObject):
 
             pygame.draw.rect(surface, self.body_color, rect)
 
+        def draw_game_area(snake, apple, bombs):
+            """Игровое поле"""
+            screen.fill(BOARD_BACKGROUND_COLOR)
+            for segment in snake.positions:
+                snake.draw_cell(segment)
+            for bomb in bombs:
+                bomb.draw()
+
+    if apple.position is not None:
+        apple.draw()
+
 class Snake(GameObject):
     """Наследуемый класс змейки."""
 
