@@ -64,15 +64,11 @@ SNAKE_COLOR = (0, 255, 0)
 # Скорость движения змейки:
 SPEED = 20
 
-# Настройка игрового окна:
+pygame.init()
+FONT = pygame.font.Font(None, 24)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-
-# Заголовок окна игрового поля:
 pygame.display.set_caption('Змейка')
-
-# Настройка времени:
 clock = pygame.time.Clock()
-
 
 # Тут опишите все классы игры.
 class GameObject:
@@ -103,10 +99,9 @@ class Apple(GameObject):
     Класс Apple. Наследуются от GameObject.
     Появляется в случайном месте поля.
     """
-
-    super().__init__(position=None, body_color=APPLE_COLOR)
-
-    self.randomize_position()
+    def __init__(self, body_color=APPLE_COLOR):
+         super().__init__(position=None, body_color=APPLE_COLOR)
+         self.randomize_position()
 
     def randomize_position(self):
         """
@@ -134,12 +129,13 @@ class Apple(GameObject):
             pygame.draw.rect(surface, self.body_color, rect)
 
         def draw_game_area(snake, apple, bombs):
-            """Игровое поле"""
+            """Игровое поле."""
             screen.fill(BOARD_BACKGROUND_COLOR)
-            for segment in snake.positions:
-                snake.draw_cell(segment)
+            snake.draw()
             for bomb in bombs:
-                bomb.draw()
+                bomb.draw(screen)
+            if apple.position is not None:
+               apple.draw(screen)
 
     if apple.position is not None:
         apple.draw()
