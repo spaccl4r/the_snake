@@ -198,6 +198,20 @@ class Apple(GameObject):
                apple.draw(screen)
 
 
+        def draw_info_area(score):
+            """Информационное поле."""
+            info_area = pygame.Rect(SCREEN_WIDTH - INFO_AREA_WIDTH, 0,
+                            INFO_AREA_WIDTH, SCREEN_HEIGHT)
+            pygame.draw.rect(screen, LIGHT_GRAY, info_area)
+            y = 10
+            for text in INSTRUCTION_TEXT:
+                if '{}' in text:
+                    text = text.format(score)
+                line = FONT.render(text, True, BLACK)
+                screen.blit(line, (SCREEN_WIDTH - 390, y))
+                y += 30
+
+
     def reset_game(snake, apple, bombs):
         """Сброс параметров игры."""
         global score, frame_delay, apples_eaten
@@ -208,6 +222,7 @@ class Apple(GameObject):
         bombs.clear()
         occupied_cells = [*snake.positions, *(bomb.position for bomb in bombs)]
         apple.randomize_position(occupied_cells)
+
 
     def game_over(collision_type):
         """Сценарий завершения игры."""
